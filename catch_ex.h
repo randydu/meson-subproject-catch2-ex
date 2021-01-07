@@ -80,4 +80,9 @@ bool is_same_tag(const std::string &tag1, const std::string &tag2);
     }); \
     });
 
+#define ENABLE_VERBOSE_PRINT AUTO_START(catch_ex::enable_verbose_printing(true))
+
+#define DISABLE_VERBOSE_PRINT AUTO_START(catch_ex::enable_verbose_printing(false))
+
+
 #endif

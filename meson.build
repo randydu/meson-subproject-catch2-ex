@@ -1,6 +1,10 @@
 project('catch2-ex', 'cpp', version: '1.0', default_options: ['cpp_std=c++17'])
 
-catch2_dep = subproject('catch2').get_variable('catch2_dep')
+if host_machine.system() == 'windows'
+    add_project_arguments(['-DDO_NOT_USE_WMAIN'], language: 'cpp') 
+endif
+
+catch2_dep = dependency('catch2')
 
 executable('catch-ex-test', ['catch_ex_tests.cpp', 'catch_ex.cpp'], dependencies: catch2_dep)
 

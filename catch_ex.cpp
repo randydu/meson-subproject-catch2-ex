@@ -4,9 +4,7 @@
 #include <tuple>
 #include <vector>
 
-#ifndef CATCH_CONFIG_MAIN
 #define CATCH_CONFIG_MAIN
-#endif
 #include <catch2/catch.hpp>
 
 #include "catch_ex.h"

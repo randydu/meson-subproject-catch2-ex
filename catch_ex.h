@@ -2,6 +2,7 @@
 #define CATCH_EX_H_INCLUDED
 
 #include <functional>
+#include <string>
 
 namespace catch_ex {
 typedef std::function<void(bool start)> test_callback_t;

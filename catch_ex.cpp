@@ -81,13 +81,13 @@ public:
 
     void register_tag_callback(const std::string& tag_or_tags, tag_callback_t tag_callback, bool shared)
     {
-        cbi_tags.push_back(std::make_tuple(tag_callback, shared));
+        cbi_tags.emplace_back(tag_callback, shared);
         callback_handle_t h = cbi_tags.size() - 1;
 
         for (const auto& tag : parse_tags(tag_or_tags)) {
             auto it = cb_tags.find(tag);
             if (it == cb_tags.end())
-                cb_tags.insert(std::make_pair(tag, tag_callbacks_t::value_type::second_type{h}));
+                cb_tags.emplace(tag, tag_callbacks_t::value_type::second_type{h});
             else
                 it->second.push_back(h);
         }
@@ -162,9 +162,9 @@ public:
         inherited::testCaseStarting(_testInfo);
 
         if (man().verbose_printing_enabled()) {
-            std::cout << "testcase-name (" << _testInfo.name.c_str() << "), tag: (";
+            std::cout << "testcase-name (" << _testInfo.name << "), tag: (";
             for (auto const& tag : _testInfo.tags)
-                std::cout << tag.c_str() << ", ";
+                std::cout << tag << ", ";
             std::cout << ") starting..." << std::endl;
         }
 
@@ -204,9 +204,9 @@ public:
     void testCaseEnded(Catch::TestCaseStats const& _testCaseStats) override
     {
         if (man().verbose_printing_enabled()) {
-            std::cout << "testcase-name (" << _testCaseStats.testInfo.name.c_str() << "), tag: (";
+            std::cout << "testcase-name (" << _testCaseStats.testInfo.name << "), tag: (";
             for (auto const& tag : _testCaseStats.testInfo.tags)
-                std::cout << tag.c_str() << ", ";
+                std::cout << tag << ", ";
             std::cout << ") ended!" << std::endl;
         }
 

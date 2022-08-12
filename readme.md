@@ -1,6 +1,6 @@
 # Catch2 Extension
 
-This library provides some useful macros and utilities for catch2 based unit tests.
+This library provides some useful message macros and callback utilities for catch2 based unit tests.
 
 ## Dependency
 catch2
@@ -22,7 +22,7 @@ ERROR_MESSAGE("Error found");
 
 ```
 
-When to run some code on the whole test starts or ends?
+To run some code when the whole test executive starts or ends:
 
 ```c++
 #include <catch_ex.h>
@@ -38,10 +38,10 @@ AUTO_EXIT({
 
 ## Callbacks
 
-We can define callback functions which is called when an unit test begins and ends which can be used to implement global or tag based fixtures.
+A callback function is called when an unit test starts or ends, it can be used to implement global or tag based unit test fixtures.
 
 
-In the following example, we define a global callback for the whole unit test instance:
+In the following example, we define a global test callback for the whole unit test instance:
 
 ```c++
 #include <catch_ex.h>
@@ -56,12 +56,10 @@ void test_callback(bool start)
 }
 
 //Register a global callback for the whole test
-AUTO_START({
-    catch_ex::register_test_callback(test_callback);
-});
+REGISTER_TEST_CALLBACK(test_callback);
 ```
 
-We can also define callback for unit tests with tag or tags:
+We can also define callback for unit tests with a tag or multiple tags:
 
 ```c++
 //will be called only once (shared-callback) for all tests with [tag1]
@@ -93,11 +91,17 @@ TEST_CASE("test-a2", "[tag1]"){} //will invoke mycallback1 upon execution
 TEST_CASE("test-b", "[tag2]"){} //will invoke mycallback2 upon execution
 TEST_CASE("test-c", "[tag3]"){} //will invoke mycallback2 upon execution
 
-AUTO_START({
-    REGISTER_SHARED_TAG_CALLBACK("tag1", mycallback1);
-    //not-shared callback, mycallback2 called for both test-b & test-c.
-    REGISTER_TAG_CALLBACK("tag2, tag3", mycallback2);
-    //shared callback, mycallback3 only called once.
-    REGISTER_SHARED_TAG_CALLBACK("tag2, tag3", mycallback3);
-});
+///////// Callback Registration //////////////////////
+REGISTER_SHARED_TAG_CALLBACK("tag1", mycallback1);
+//not-shared callback, mycallback2 called for both test-b & test-c.
+REGISTER_TAG_CALLBACK("tag2, tag3", mycallback2);
+//shared callback, mycallback3 only called once.
+REGISTER_SHARED_TAG_CALLBACK("[tag2], [tag3]", mycallback3);
 ```
+
+To show the process of callback executions, you can enable detailed printing as follows:
+
+```c++
+ENABLE_VERBOSE_PRINT;
+```
+

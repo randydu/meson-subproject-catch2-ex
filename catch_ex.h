@@ -6,10 +6,10 @@
 
 namespace catch_ex {
 typedef std::function<void(bool start)> test_callback_t;
-typedef std::function<void(bool start, const std::string &tag)> tag_callback_t;
+typedef std::function<void(bool start, const std::string& tag)> tag_callback_t;
 
 void register_test_callback(test_callback_t test_callback);
-void register_tag_callback(const std::string &tag_or_tags, bool shared, tag_callback_t tag_callback);
+void register_tag_callback(const std::string& tag_or_tags, bool shared, tag_callback_t tag_callback);
 
 void enable_verbose_printing(bool enable);
 bool verbose_printing();
@@ -24,24 +24,27 @@ struct autostart {
     dummy_t f_;
     dummy_t g_;
 
-    autostart(dummy_t &&f) : f_(std::move(f)) {
+    autostart(dummy_t&& f) : f_(std::move(f))
+    {
         if (f_)
             f_();
     }
-    autostart(dummy_t &&f, dummy_t &&g) : f_(std::move(f)), g_(std::move(g)) {
+    autostart(dummy_t&& f, dummy_t&& g) : f_(std::move(f)), g_(std::move(g))
+    {
         if (f_)
             f_();
     }
-    ~autostart() {
+    ~autostart()
+    {
         if (g_)
             g_();
     }
 };
 
 // for internal usage, published for unit-test.
-std::vector<std::string> parse_tags(std::string const &arg);
-std::string parse_first_tag(std::string const &arg);
-bool is_same_tag(const std::string &tag1, const std::string &tag2);
+std::vector<std::string> parse_tags(std::string const& arg);
+std::string parse_first_tag(std::string const& arg);
+bool is_same_tag(const std::string& tag1, const std::string& tag2);
 } // namespace catch_ex
 
 #ifndef COMBINE1
@@ -65,7 +68,6 @@ bool is_same_tag(const std::string &tag1, const std::string &tag2);
 #define REGISTER_SHARED_TAG_CALLBACK(tag, cb) AUTO_START(catch_ex::register_tag_callback(tag, true, cb));
 
 #define TAG_CALLBACK_BEGIN(tag, shared) catch_ex::autostart COMBINE(autostart, __LINE__) ( [](){  catch_ex::register_tag_callback(tag, shared, [&](bool start, const std::string& tag_){ if(catch_ex::is_same_tag(tag, tag_)) {
-
 #define ON_START(code) \
     if (start) {       \
         code;          \
@@ -76,9 +78,9 @@ bool is_same_tag(const std::string &tag1, const std::string &tag2);
         code;        \
     }
 
-#define TAG_CALLBACK_END      \
-    }                         \
-    }); \
+#define TAG_CALLBACK_END \
+    }                    \
+    });                  \
     });
 
 #define ENABLE_VERBOSE_PRINT AUTO_START(catch_ex::enable_verbose_printing(true))
